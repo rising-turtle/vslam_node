@@ -57,7 +57,7 @@ public:
   void processUserActions();
   void remoteKeyCb(const std_msgs::StringConstPtr& key_input);
   bool mb_first_frame; 
-  std::ofstream m_dpt_of;         // where the depth data is stored 
+  std::ifstream m_dpt_of;         // where the depth data is stored 
   string m_dpt_file;            
   std::ofstream m_est_traj;       // where to save estimated trajectory 
   void recordTraj(const SE3& T_w_f, const double timestamp);
