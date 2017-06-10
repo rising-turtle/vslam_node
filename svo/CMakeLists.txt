@@ -73,5 +73,8 @@ TARGET_LINK_LIBRARIES(vslam_svo vslam_svo_visualizer)
 
 ADD_EXECUTABLE(vslam_svo_dpt src/vo_node_dpt.cpp)
 TARGET_LINK_LIBRARIES(vslam_svo_dpt vslam_svo_visualizer) 
+
+ADD_EXECUTABLE(fast_detector src/feature_detect.cpp)
+TARGET_LINK_LIBRARIES(fast_detector ${LINK_LIBS})
 # ADD_EXECUTABLE(benchmark src/benchmark_node.cpp)
 # TARGET_LINK_LIBRARIES(benchmark svo_visualizer)

@@ -1,0 +1,36 @@
+<launch>
+  
+    <node pkg="vslam_svo" type="vslam_svo" name="svo" clear_params="true" output="screen">
+    <param name="cam_topic" value="/rgb"/>
+    <param name="publish_dense_input" value="true"/>
+
+    <!-- Camera calibration file -->
+    <rosparam file="$(find vslam_svo)/param/TUM2.yaml" /> <!-- R200.yaml TUM2.yaml -->
+
+    <!-- following parameters related to feature extraction  -->
+    <param name="triang_min_corner_score" value="7.0"/> <!-- threshold for fast detection-->
+    <param name="grid_size"   value="15"/> <!-- 30 20 -->
+    <param name="n_pyr_levels" value="5"/> <!-- 3  -->
+
+    <!-- following parameters related to feature tracking  -->
+    <param name="max_fts" value="270"/> <!-- maximum tracked feature for each frame -->
+    <param name="reproj_thresh"   value="5.0"/>
+    <param name="poseoptim_thresh" value="5.0"/> <!-- reprojection error threshold for feature match--> 
+
+    <!-- following parameters related to improve accuracy -->
+    <param name="max_n_kfs" value="10"/> <!-- number of keyframes kept -->
+    <param name="loba_num_iter" value="5"/> 
+    <param name="subpix_n_iter" value="0"/> <!-- 0 no subpix refinement -->
+
+    <!-- following parameters related to optimization -->
+    <param name="loba_robust_huber_width" value="3."/>
+    
+  <!-- following are thresholds determine the success of vo tracking-->
+    <param name="init_min_disparity" value="30"/>
+    <param name="init_min_inliers" value="30"/>
+    <param name="quality_min_fts" value="50"/> <!-- number of matched features, if too small will result in crazy jump-->
+    <param name="quality_max_drop_fts" value="50"/> <!-- if the number of dropped features below this threshold, start relocalization -->
+
+    </node>
+
+    </launch>
