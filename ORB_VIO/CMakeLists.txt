@@ -13,7 +13,7 @@ SET(CMAKE_BUILD_TYPE Release) # Release, RelWithDebInfo
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall  -O3 -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w  -O3 -march=native")
 
 IF(CMAKE_COMPILER_IS_GNUCC)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
@@ -74,5 +74,9 @@ add_executable(VIO src/ros_vio.cc src/MsgSync/MsgSynchronizer.cpp src/MsgSync/Ms
 target_link_libraries(VIO
 ${LIBS} ${catkin_LIBRARIES}
 )
+
+####### VIORB wrapper to handle our datasets
+add_executable(viorb src/off_viorb.cpp src/imu_vn100.cpp src/MsgSync/MsgSynchronizer.cpp src/MsgSync/MsgSynchronizer.h)
+target_link_libraries(viorb ${LIBS} ${catkin_LIBRARIES})
 
 
