@@ -1,0 +1,9 @@
+
+<launch>
+    
+    <arg name="Voc_file" default="/home/davidz/work/3rdlibs/LearnVIORB/Vocabulary/ORBvoc.bin"/>
+    <arg name="Con_file" default="/home/davidz/work/ros/indigo/src/vslam_node/ORB_VIO/config/rocane.yaml"/>
+ 	<node pkg="vslam_viorb" type="viorb" name="viorb"  args="$(arg Voc_file) $(arg Con_file)" cwd="node" output="screen">
+	</node>
+
+</launch>

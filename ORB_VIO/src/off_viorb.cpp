@@ -41,7 +41,9 @@ class Msg
     bool LoadRGBDIr2(const string &strAssociationFilename, vector<string> &vstrImageFilenamesRGB, vector<string> &vstrImageFilenamesD, vector<string> &vstrIr1, vector<string>& strIr2, vector<double> &vTimestamps);
 
     MSG_TYPE currMsg(cv::Mat& img, Eigen::Vector6d& v6, double & timestamp); 
-    bool moveNext(); 
+    bool moveNext(MSG_TYPE ); 
+    bool moveNextImg(); 
+    bool moveNextIMU(); 
     CImuVn100 m_imu_reader;
 
     // image 
@@ -123,9 +125,12 @@ int main(int argc, char* argv[])
     if(bdata)
     {
       handleMsg(SLAM, imageMsg, vimuMsg); 
+    }else
+    {
+     // ROS_WARN("off_viorb.cpp: failed to getRecentMsg!");
     }
 
-    if(!msg.moveNext())
+    if(!msg.moveNext(msg_type))
     {
       ROS_WARN("off_viorb.cpp: finish all msgs!"); 
       break; 
@@ -196,8 +201,11 @@ Msg::Msg(string dataDir)  :
   string index_file = dataDir + "/timestamp.txt"; 
   if(!LoadRGBDIr2(index_file, mvRgb, mvDpt, mvIr1, mvIr2, mvTimeImg))
   {
-    ROS_ERROR("off_viorb.cpp: failed to read imu_file %s", imu_file.c_str()); 
+    ROS_ERROR("off_viorb.cpp: failed to read img data %s", index_file.c_str()); 
     return; 
+  }else
+  {
+    ROS_INFO("off_viorb.cpp: succeed to read %d images", mvRgb.size()); 
   }
   
   // data is ready 
@@ -231,14 +239,28 @@ Msg::MSG_TYPE Msg::currMsg(cv::Mat& rgb, Eigen::Vector6d& v6, double &timestamp)
   return ret_msg_type; 
 }
 
-bool Msg::moveNext()
+bool Msg::moveNext(Msg::MSG_TYPE type)
+{
+  if(type == IMU_MSG)
+    return moveNextIMU();
+  else if(type == IMG_MSG)
+    return moveNextImg(); 
+  ROS_ERROR("type is neither IMU nor IMG ");
+  return false;
+}
+bool Msg::moveNextImg()
 {
   if(++m_img_index >= mvRgb.size())
   {
-    ROS_INFO("off_viorb.cpp: rgb image has all handled!"); 
+    ROS_INFO("off_viorb.cpp: rgb image has all handled! m_img_index = %d mvRgb.size = %d", m_img_index, mvRgb.size()); 
     return false; 
   }
-  if(m_imu_reader.moveNext())
+  return true; 
+}
+
+bool Msg::moveNextIMU()
+{
+  if(!m_imu_reader.moveNext())
   {
     ROS_INFO("off_viorb.cpp: imu measurement has all handled!"); 
     return false;

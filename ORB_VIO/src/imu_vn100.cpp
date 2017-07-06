@@ -1,6 +1,7 @@
 
 #include "imu_vn100.h"
 #include <fstream>
+#include <iostream>
 
 using namespace std; 
 // using namespace gtsam; 
@@ -34,6 +35,7 @@ bool CImuVn100::moveNext()
 {
   if(++mv_index >= mv_measurements.size()) 
   {
+    cout << "imu_vn100.cpp: mv_index = "<<mv_index <<" >= "<< mv_measurements.size()<<" mv size"<<endl;
     return false;
   }
   return true; 
