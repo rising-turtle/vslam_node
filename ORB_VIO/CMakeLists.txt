@@ -79,4 +79,9 @@ ${LIBS} ${catkin_LIBRARIES}
 add_executable(viorb src/off_viorb.cpp src/imu_vn100.cpp src/MsgSync/MsgSynchronizer.cpp src/MsgSync/MsgSynchronizer.h)
 target_link_libraries(viorb ${LIBS} ${catkin_LIBRARIES})
 
+####### VIORB uses first dpt data to compute scale 
+add_executable(viorb_dpt src/off_viorb_dpt_first.cpp src/imu_vn100.cpp src/MsgSync/MsgSynchronizer.cpp src/MsgSync/MsgSynchronizer.h)
+target_link_libraries(viorb_dpt ${LIBS} ${catkin_LIBRARIES})
+
+
 
