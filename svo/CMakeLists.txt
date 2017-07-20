@@ -78,3 +78,11 @@ ADD_EXECUTABLE(fast_detector src/feature_detect.cpp)
 TARGET_LINK_LIBRARIES(fast_detector ${LINK_LIBS})
 # ADD_EXECUTABLE(benchmark src/benchmark_node.cpp)
 # TARGET_LINK_LIBRARIES(benchmark svo_visualizer)
+
+# vio : svo + imu 
+add_executable(vslam_vio_svo src/vio_node_dpt.cpp)
+target_link_libraries(vslam_vio_svo vslam_svo_visualizer) 
+
+
+
+
