@@ -11,7 +11,7 @@ ELSE()
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ENDIF()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w -fpermissive")
 
 # Add catkin and required ROS packages
 FIND_PACKAGE(catkin REQUIRED COMPONENTS 
@@ -28,6 +28,7 @@ FIND_PACKAGE(catkin REQUIRED COMPONENTS
   svo_msgs
   vikit_common
   vikit_ros
+  graph_wrapper
 )
 
 # Add plain cmake packages 
@@ -52,7 +53,9 @@ INCLUDE_DIRECTORIES(
   ${Sophus_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
-  src
+  src 
+  ../graph/gtsam
+  ../../graph_slam/gtsam 
 )
 
 # Set link libraries
@@ -61,7 +64,17 @@ LIST(APPEND LINK_LIBS
   ${Sophus_LIBRARIES}
   ${Boost_LIBRARIES}
   ${catkin_LIBRARIES}
+  gtsam_wrapper
+  imu_interface
 )
+
+################### GTSAM 4.0 ######################
+# set(GTSAM_ROOT /home/david/work/3rdlibs/gtsam-4.0/build)
+set(GTSAM_ROOT /home/davidz/work/3rdlibs/gtsam-4.0/build)
+ find_package(GTSAM REQUIRED 
+   PATHS ${GTSAM_ROOT}) 
+include_directories(${GTSAM_INCLUDE_DIR} ${GTSAM_ROOT}) # ${GTSAM_ROOT}/../gtsam/3rdparty/Eigen) # /usr/include/eigen3
+# link_directories(${GTSAM_ROOT}/gtsam )
 
 # Create visualizer library
 ADD_LIBRARY(vslam_svo_visualizer src/visualizer.cpp)

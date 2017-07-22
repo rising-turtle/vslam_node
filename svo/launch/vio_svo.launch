@@ -7,9 +7,9 @@
     <rosparam file="$(find vslam_svo)/param/R200_rect.yaml" /> <!-- R200.yaml TUM2.yaml -->
 
     <!-- following parameters related to feature extraction  -->
-    <param name="triang_min_corner_score" value="7.0"/> <!-- threshold for fast detection-->
+    <param name="triang_min_corner_score" value="5.0"/> <!-- 7.0 threshold for fast detection-->
     <param name="grid_size"   value="15"/> <!-- 30 20 -->
-    <param name="n_pyr_levels" value="5"/> <!-- 3  -->
+    <param name="n_pyr_levels" value="7"/> <!-- 3  -->
 
     <!-- following parameters related to feature tracking  -->
     <param name="max_fts" value="270"/> <!-- maximum tracked feature for each frame -->

@@ -9,9 +9,9 @@
         <!-- rosparam file="/home/davidz/work/data/sin2_tex2_h1_v8_d/camera_pinhole.yaml" /--> <!--camera_pinhole_R200 camera_atan-->
 
         <!-- following parameters related to feature extraction -->
-        <param name="triang_min_corner_score" value="5.0"/>
-        <param name="grid_size"   value="20"/> <!-- 30 20 -->
-        <param name="n_pyr_levels" value="5"/> <!-- 3  -->
+        <param name="triang_min_corner_score" value="2.0"/> <!-- "5.0"-->
+        <param name="grid_size"   value="10"/> <!-- 30 20 -->
+        <param name="n_pyr_levels" value="7"/> <!-- 5 3  -->
     </node>
   
   <node pkg="img_pub" type="test_pub_realsense" name="test_img_pub_realsense" output="screen">
@@ -21,6 +21,7 @@
       <param name="data_dir" value="/media/davidz/work/work/data/rgbd/rgbd_dataset_freiburg1_desk2"/>
       <param name="data_dir" value="/media/davidz/work/work/data/rgbd/rgbd_dataset_freiburg2_desk"/>
       <param name="data_dir" value="/media/davidz/work/work/data/realsense/etasF4_06_01_01"/>
+      <param name="data_dir" value="/home/davidz/work/data/ETAS_2F_640_30"/>
 
   </node>
 
