@@ -55,8 +55,9 @@ using symbol_shorthand::L; // plane landmark (nv, d)
 
 void vio_node_dpt(); 
 
-Node* createNodeByFrame(const FramePtr& fr, int id, OptionalJacobian<6,6> H1 = boost::none); 
-void addSVOResult(CGraph& gt, const FramePtr& fr);
+Node* createNodeByFrame(const FramePtr& fr, int id, Pose3 Ts2c, OptionalJacobian<6,6> H1 = boost::none); 
+void addSVOResult(CGraph& gt, Pose3 pre_cam_pose, Pose3 Ts2c, const FramePtr& fr, Pose3* imu_est = 0);
+Pose3 getFramePose(FramePtr fr); 
 void updateFramePose(FramePtr fr, const Pose3& pose); 
 Sophus::SE3 fromPose3(const Pose3& pose); 
 
@@ -140,6 +141,10 @@ void vio_node_dpt()
   cv::Mat rgb; 
   cv::Mat gray; 
   cv::Mat dpt; 
+  
+  // last camera pose
+  Pose3 last_cam_pose; 
+  int N_TRUST_SVO = 200; 
 
   // iterate IMG file
   for(int i=0; i<mvRgb.size() && ros::ok(); i++)
@@ -156,7 +161,10 @@ void vio_node_dpt()
     cvtColor(gray,gray,CV_RGB2GRAY);
     
     cv::imshow("gray", gray); 
-    cv::waitKey(0); 
+    if( i > N_TRUST_SVO)
+      cv::waitKey(0); 
+    else
+      cv::waitKey(10);
 
     if(i==0) // first img, initialization 
     {
@@ -178,7 +186,7 @@ void vio_node_dpt()
       vo_->setFirstFrame(frame_ref); 
 
       // add first node to graph 
-      Node* n = createNodeByFrame(frame_ref, 0); 
+      Node* n = createNodeByFrame(frame_ref, 0, Ts2c); 
       gt.firstNode(n); 
       
       // set start point of imu
@@ -212,27 +220,35 @@ void vio_node_dpt()
       Pose3 inc_cam = Tc2s * inc_imu * Ts2c; 
       Point3 t(0,0,0);
       Pose3 inc_cam_rot = Pose3::Create(inc_cam.rotation(), t); 
-      // cout <<"imu estimate inc_cam : "<<inc_cam<<endl; 
+      // cout <<"imu estimate inc_cam : "<<i<<inc_cam<<endl; 
       // only use rotation as prior info
-      Sophus::SE3 inc_cam_se3 = fromPose3(inc_cam_rot); 
+      Sophus::SE3 inc_cam_se3; 
+      if( cur_node_id < N_TRUST_SVO) // do not trust imu's acceleration integration 
+         inc_cam_se3 = fromPose3(inc_cam_rot); 
+      else
+         inc_cam_se3 = fromPose3(inc_cam); 
       // Sophus::SE3 inc_cam_se3 = fromPose3(inc_cam); 
 
       vo_->addIncPrior(inc_cam_se3); 
 
       // run svo 
-      vo_->addImage(gray, mvTimeImg[i]); 
-      if(vo_->trackingQuality() == FrameHandlerBase::TRACKING_GOOD)
+      // vo_->addImage(gray, mvTimeImg[i]); 
+      // vo_->addImageSimple(gray, mvTimeImg[i]); 
+      FrameHandlerBase::UpdateResult res = vo_->addImageFront(gray, mvTimeImg[i]); 
+
+      // if(vo_->trackingQuality() == FrameHandlerBase::TRACKING_GOOD)
+      if(res != FrameHandlerBase::RESULT_FAILURE)
       {
         // add svo's result into graph 
-        addSVOResult(gt, vo_->lastFrame()); 
+        // addSVOResult(gt, vo_->lastFrame()); 
+        if(i < N_TRUST_SVO)
+          addSVOResult(gt, last_cam_pose.inverse(), Ts2c, vo_->newFrame()); // 
+        else
+          addSVOResult(gt, last_cam_pose.inverse(), Ts2c, vo_->newFrame(), &inc_cam); // use imu's estimation to estimate vo's scale 
 
         // optimize graph to update last frame's pose and imu's bias
-        gt.optimizeGraphIncremental(); // isam2 
-       
-        // publish for visualization 
-        visualizer_.publishMinimal(gray, vo_->lastFrame(), *vo_, mvTimeImg[i]);
-        if(vo_->stage() != FrameHandlerBase::STAGE_PAUSED)
-         visualizer_.visualizeMarkers(vo_->lastFrame(), vo_->coreKeyframes(), vo_->map());
+        gt.optimizeGraphIncremental(); // isam2        
+        *(gt.m_graph_map[cur_node_id]->mpPose) =  gt.mp_node_values->at<Pose3>(X(cur_node_id)); 
       }else
       {
         Pose3 cur_pose = gt.mp_node_values->at<Pose3>(X(cur_node_id)); 
@@ -248,14 +264,40 @@ void vio_node_dpt()
       imu->resetPreintegrationAndBias(gt.mp_node_values->at<imuBias::ConstantBias>(B(cur_node_id))); 
       pre_state = NavState(gt.mp_node_values->at<Pose3>(X(cur_node_id)), gt.mp_node_values->at<Vector3>(V(cur_node_id))); 
       imu->setState(pre_state); 
-      // update svo's pose 
-      //  updateFramePose(vo_->lastFrame(), pre_state.pose());   
+      if(cur_node_id > N_TRUST_SVO)
+      {
+        // svo's pose reset 
+        Pose3 gt_pre_pose = gt.mp_node_values->at<Pose3>(X(cur_node_id-1)); 
+        Pose3 gt_cur_pose = gt.mp_node_values->at<Pose3>(X(cur_node_id)); 
+        Pose3 gt_inc = gt_pre_pose.inverse()*gt_cur_pose; 
+        // cout <<"gtsam_inc: "<<i<<gt_inc<<endl;
+        // update svo's pose 
+        Pose3 cam_inc = Tc2s * gt_inc * Ts2c; 
+        //  updateFramePose(vo_->lastFrame(), pre_state.pose()); 
+        // SVO_WARN_STREAM("cam_pre = "<<i<<last_cam_pose.inverse()); 
+        Pose3 cam_cur = last_cam_pose.inverse() * cam_inc; 
+        // cout <<"cam_cur = "<<i<<cam_cur<<endl; 
+        // updateFramePose(vo_->lastFrame(), cam_cur); 
+        updateFramePose(vo_->newFrame(), cam_cur); 
+      }
+      
+      // add frame to map for triangulating features 
+      vo_->addImageBack(); 
+      
     }
+
+    // publish for visualization 
+    visualizer_.publishMinimal(gray, vo_->lastFrame(), *vo_, mvTimeImg[i]);
+    if(vo_->stage() != FrameHandlerBase::STAGE_PAUSED)
+      visualizer_.visualizeMarkers(vo_->lastFrame(), vo_->coreKeyframes(), vo_->map());
+
+    // save camera's last pose 
+    last_cam_pose = getFramePose(vo_->lastFrame()); 
 
     visualizer_.exportToDense(vo_->lastFrame()); 
 
     ros::spinOnce(); 
-    usleep(100); 
+    usleep(50*1000); 
   }
 
   return ; 
@@ -267,6 +309,13 @@ Sophus::SE3 fromPose3(const Pose3& pose)
   return ret; 
 }
 
+Pose3 getFramePose(FramePtr fr)
+{
+  Rot3 R(fr->T_f_w_.rotationMatrix());
+  Pose3 ret = Pose3::Create(R , fr->T_f_w_.translation()); 
+  return ret; 
+}
+
 void updateFramePose(FramePtr fr, const Pose3& pose)
 {
   Pose3 T_fw = pose.inverse(); 
@@ -275,7 +324,7 @@ void updateFramePose(FramePtr fr, const Pose3& pose)
   return ; 
 }
 
-Node* createNodeByFrame(const FramePtr& fr, int id, OptionalJacobian<6,6> H )
+Node* createNodeByFrame(const FramePtr& fr, int id, Pose3 Ts2c, OptionalJacobian<6,6> H )
 {
   Node* ret = new Node; 
   ret->m_id = id; 
@@ -284,28 +333,55 @@ Node* createNodeByFrame(const FramePtr& fr, int id, OptionalJacobian<6,6> H )
   T_fw.block<3,3>(0,0) = fr->T_f_w_.rotationMatrix(); 
   T_fw.block<3,1>(0,3) = fr->T_f_w_.translation(); 
   Pose3 PT_fw(T_fw); 
-  *(ret->mpPose) = PT_fw.inverse(H); 
+  *(ret->mpPose) = Ts2c * PT_fw.inverse(H) * Ts2c.inverse(); 
   return ret; 
 }
-void addSVOResult(CGraph& gt, const FramePtr& fr)
+
+void scaleEst(Pose3& pce_c, Pose3& pce_imu, Pose3& Ts2c)
+{
+  Pose3 pce_vo = Ts2c * pce_c * Ts2c.inverse(); 
+  double norm_vo = pce_vo.translation().norm(); 
+  double norm_imu = pce_imu.translation().norm();
+  if(norm_vo < 1e-6)
+    return ; 
+  
+  int R = 5; 
+
+  if(norm_vo > R * norm_imu || norm_vo * R < norm_imu)
+  {
+    double scale = norm_imu / norm_vo; 
+    // pce_vo = Pose3::Create(pce_vo.rotation(), scale * pce_vo.translation());
+    pce_c = Pose3::Create(pce_c.rotation(), scale * pce_c.translation());
+  }
+  return ;
+}
+
+void addSVOResult(CGraph& gt, Pose3 pre_cam_pose, Pose3 Ts2c, const FramePtr& fr, Pose3* inc_imu_pose)
 {
   Eigen::Matrix<double, 6, 6> HM = Eigen::Matrix<double, 6, 6>::Identity(); 
   OptionalJacobian<6,6> H(HM); 
   int cur_id = gt.m_graph_map.size(); 
-  Node* pre_n = gt.m_graph_map[cur_id-1]; 
-  Node* cur_n = createNodeByFrame(fr, cur_id, H); 
+  // Node* pre_n = gt.m_graph_map[cur_id-1]; 
+  Node* cur_n = createNodeByFrame(fr, cur_id, Ts2c, H); 
 
   // cout <<"*H "<<*H<<endl; 
   // cout <<"(*H).transpose() "<<(*H).transpose()<<endl;
   Eigen::Matrix<double, 6, 6> COV = (*H)*fr->Cov_*((*H).transpose()); 
   
   MatchingResult mr; 
-  mr.m_id_from = pre_n->m_id; 
+  mr.m_id_from = cur_n->m_id - 1; 
   mr.m_id_to = cur_n->m_id;  
 
-  Pose3 inc_pose = pre_n->mpPose->between(*(cur_n->mpPose)); // H2 = Identity  
-  // cout <<"svo result inc_cam: "<<inc_pose<<endl; 
-  mr.m_trans = inc_pose.matrix(); 
+  // Pose3 inc_pose = pre_n->mpPose->between(*(cur_n->mpPose)); // H2 = Identity  
+  Pose3 cur_cam_pose = Ts2c.inverse() * (*(cur_n->mpPose)) * Ts2c; 
+  Pose3 inc_cam_pose = pre_cam_pose.between(cur_cam_pose); 
+  if(inc_imu_pose != 0)
+  {
+    scaleEst(inc_cam_pose, *inc_imu_pose, Ts2c); 
+  }
+
+  // cout <<"svo result inc_cam: "<<inc_cam_pose<<endl; 
+  mr.m_trans = inc_cam_pose.matrix(); 
   mr.m_informationM = COV.inverse(); 
   // cout <<"svo result COV: "<<mr.m_informationM<<endl;
 

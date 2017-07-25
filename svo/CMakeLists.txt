@@ -96,6 +96,7 @@ TARGET_LINK_LIBRARIES(fast_detector ${LINK_LIBS})
 add_executable(vslam_vio_svo src/vio_node_dpt.cpp)
 target_link_libraries(vslam_vio_svo vslam_svo_visualizer) 
 
-
+add_executable(vslam_svo_pipeline src/test_pipeline_visual.cpp )
+target_link_libraries(vslam_svo_pipeline vslam_svo_visualizer)
 
 

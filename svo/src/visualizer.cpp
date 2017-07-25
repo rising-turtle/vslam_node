@@ -128,6 +128,7 @@ void Visualizer::publishMinimal(
 
     if(img_pub_level_ == 0)
     {
+      // ROS_INFO("frame has fts: %d", frame->fts_.size());
       for(Features::iterator it=frame->fts_.begin(); it!=frame->fts_.end(); ++it)
       {
         if((*it)->type == Feature::EDGELET)
