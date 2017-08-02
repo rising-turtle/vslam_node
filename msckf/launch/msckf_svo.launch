@@ -1,0 +1,11 @@
+<launch>
+    <node name="msf_svo" pkg="msf_updates" type="pose_sensor" clear_params="true" output="screen">
+            
+            <remap from="/msf_core/imu_state_input" to="/vn100_imu0" />
+            <!--remap from="/msf_updates/transform_input" to="/vicon/auk/auk" /-->
+	    <rosparam file="../config/msf_svo.yaml"/>
+    </node>
+
+    <node pkg="rosservice" type="rosservice" name="initialize" args="call --wait /msf_svo/pose_sensor/initialize_msf_scale 1"/>
+
+</launch>
