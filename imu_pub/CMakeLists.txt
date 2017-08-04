@@ -32,5 +32,6 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 add_library(imu_pub src/imu_pub.cpp)
 target_link_libraries(imu_pub ${catkin_LIBRARIES})
 
-
+add_executable(test_gravity_rp src/test_gravity.cpp)
+target_link_libraries(test_gravity_rp imu_pub)
 

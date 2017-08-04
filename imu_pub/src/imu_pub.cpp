@@ -41,20 +41,60 @@ void CImuPub::init(string topic)
   return ; 
 }
 
-bool CImuPub::setStartIndex(ros::Time t)
+ros::Time CImuPub::getFirstStamp()
 {
+  if(mv_timestamps.size() <= 0)
+  {
+    ROS_ERROR("imu_pub.cpp: No data now, should not call getFirstStamp()"); 
+    return ros::Time::now();
+  }
+  return mv_timestamps[0]; 
+}
+
+bool CImuPub::computeInitT(tf::Transform& T, int N)
+{
+  Eigen::Vector3d am; 
+  if(!averageAm(N, am))
+  {
+    return false; 
+  }
+  
+  double fXg, fYg, fZg; 
+  double roll, pitch;  
+  fXg = am(0); fYg = am(1); fZg = am(2); 
+  roll  = (atan2(-fYg, fZg));
+  pitch = (atan2(fXg, sqrt(fYg*fYg + fZg*fZg)));
+ 
+  T.getOrigin() = tf::Vector3(0, 0, 0); 
+  T.getBasis().setRPY(roll, pitch, 0); 
+  return true; 
+}
+
+int CImuPub::findIndex(ros::Time t)
+{
+  int ret = -1; 
   for(int i=0; i<mv_timestamps.size()-1; i++)
   {
     ros::Time& ct = mv_timestamps[i]; 
     ros::Time& nt = mv_timestamps[i+1]; 
     if(ct <= t && nt > t)
     {
-      m_curIndex = i;
-      return true; 
+      ret = i;
+      break; 
     }
   }
-  ROS_ERROR("%s setStartIndex failed with t = %lf ", __FILE__, t.toSec());
-  return false; 
+  return ret; 
+}
+
+bool CImuPub::setStartIndex(ros::Time t)
+{
+  m_curIndex = findIndex(t); 
+  if(m_curIndex < 0)
+  {
+    ROS_ERROR("%s setStartIndex failed with t = %lf ", __FILE__, t.toSec());
+    return false; 
+  }
+  return true; 
 }
 
 bool CImuPub::readImuData(string f)
@@ -116,9 +156,42 @@ bool CImuPub::publishToTime(ros::Time t)
     {
       publishCurImu();
       ++m_curIndex; 
-      ROS_WARN_STREAM("imu_pub.cpp: current time "<< cur_t<<" > t= "<<t<<" finished!");
+      // ROS_WARN_STREAM("imu_pub.cpp: current time "<< cur_t<<" > t= "<<t<<" finished!");
       break; 
     }
+  }
+  return true; 
+}
+
+bool CImuPub::averageAm(ros::Time t, Eigen::Vector3d& avgm)
+{
+  int N = findIndex(t); 
+  if(N < 0)
+  {
+    cerr <<" imu_pub.cpp: cannot find index at t: "<<t<<endl; 
+    return false; 
+  }
+  return averageAm(N, avgm); 
+}
+
+bool CImuPub::averageAm(int N, Eigen::Vector3d& avgm)
+{
+  double ax = 0;
+  double ay = 0; 
+  double az = 0; 
+  int i; 
+  for(i=0; i<mv_timestamps.size() && i<N; i++)
+  {
+    Eigen::Vector6d& m = mv_measurements[i]; 
+    ax += m(0); ay += m(1); az += m(2); 
+  }
+  if(i>0)
+  {
+    avgm(0) = ax/i; avgm(1) = ay/i; avgm(2) = az/i; 
+  }else
+  {
+    cerr <<"imu_pub.cpp: what? i = "<<i<<endl; 
+    return false; 
   }
   return true; 
 }

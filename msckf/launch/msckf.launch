@@ -5,6 +5,5 @@
             <!--remap from="/msf_updates/transform_input" to="/vicon/auk/auk" /-->
 	    <rosparam file="../config/msf_svo.yaml"/>
     </node>
-    <include file="./svo.launch"/>
 
 </launch>

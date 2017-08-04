@@ -3,10 +3,10 @@
 
 #########IMU PARAMETERS#######
 ######## Vn100 IMU
-/pose_sensor/core/core_noise_acc: 0.014
-/pose_sensor/core/core_noise_accbias: 0.004 # x10
-/pose_sensor/core/core_noise_gyr: 0.002
-/pose_sensor/core/core_noise_gyrbias: 0.0005 # x10
+/msf_svo/core/core_noise_acc: 0.014
+/msf_svo/core/core_noise_accbias: 0.004 # x10
+/msf_svo/core/core_noise_gyr: 0.002
+/msf_svo/core/core_noise_gyrbias: 0.0005 # x10
 
 ######## Pose Sensor Parameters #########
 /msf_svo/pose_sensor/pose_absolute_measurements: true

@@ -5,7 +5,7 @@
     <param name="publish_dense_input" value="true"/>
 
     <!-- Camera calibration file -->
-    <rosparam file="$(find vslam_svo)/param/TUM2.yaml" /> <!-- R200.yaml TUM2.yaml -->
+    <rosparam file="$(find vslam_svo)/param/R200.yaml" /> <!-- R200.yaml TUM2.yaml -->
 
     <!-- following parameters related to feature extraction  -->
     <param name="triang_min_corner_score" value="7.0"/> <!-- threshold for fast detection-->

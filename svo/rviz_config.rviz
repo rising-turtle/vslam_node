@@ -31,7 +31,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Image
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -54,25 +54,34 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        cam_pos:
+          Value: true
+        state:
+          Value: true
+        world:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        cam_pos:
+          world:
+            state:
+              {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /svo/keyframes
       Name: Marker
       Namespaces:
-        cams: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -80,7 +89,7 @@ Visualization Manager:
       Marker Topic: /svo/points
       Name: Marker
       Namespaces:
-        trajectory: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Image
@@ -119,7 +128,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 17.0483
+      Distance: 5.1517
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -131,10 +140,10 @@ Visualization Manager:
         Z: -0.445833
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 1.1052
+      Pitch: 1.3498
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.66715
+      Yaw: 4.28716
     Saved: ~
 Window Geometry:
   Displays:
@@ -155,4 +164,4 @@ Window Geometry:
     collapsed: true
   Width: 1855
   X: 1650
-  Y: -1051
+  Y: 9

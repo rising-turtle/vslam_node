@@ -18,6 +18,7 @@ FIND_PACKAGE(catkin REQUIRED COMPONENTS
   roscpp
   cmake_modules
   nav_msgs
+  geometry_msgs
   std_msgs
   visualization_msgs
   sensor_msgs
@@ -40,7 +41,7 @@ FIND_PACKAGE(Boost REQUIRED COMPONENTS thread)
 # Describe catkin Project
 catkin_package(
   DEPENDS Eigen OpenCV Sophus Boost
-  CATKIN_DEPENDS roscpp nav_msgs std_msgs visualization_msgs sensor_msgs image_transport cv_bridge tf svo svo_msgs vikit_common vikit_ros
+  CATKIN_DEPENDS roscpp nav_msgs geometry_msgs std_msgs visualization_msgs sensor_msgs image_transport cv_bridge tf svo svo_msgs vikit_common vikit_ros
   INCLUDE_DIRS include
   LIBRARIES svo_visualizer
 )
@@ -56,6 +57,7 @@ INCLUDE_DIRECTORIES(
   src 
   ../graph/gtsam
   ../../graph_slam/gtsam 
+  ../imu_pub/src
 )
 
 # Set link libraries
@@ -66,6 +68,7 @@ LIST(APPEND LINK_LIBS
   ${catkin_LIBRARIES}
   gtsam_wrapper
   imu_interface
+  imu_pub
 )
 
 ################### GTSAM 4.0 ######################
@@ -92,11 +95,14 @@ TARGET_LINK_LIBRARIES(fast_detector ${LINK_LIBS})
 # ADD_EXECUTABLE(benchmark src/benchmark_node.cpp)
 # TARGET_LINK_LIBRARIES(benchmark svo_visualizer)
 
-# vio : svo + imu 
+# vio : svo + imu gtsam
 add_executable(vslam_vio_svo src/vio_node_dpt.cpp)
 target_link_libraries(vslam_vio_svo vslam_svo_visualizer) 
 
 add_executable(vslam_svo_pipeline src/test_pipeline_visual.cpp )
 target_link_libraries(vslam_svo_pipeline vslam_svo_visualizer)
 
+# msckf : svo + imu msckf
+add_executable(vslam_msckf_svo src/msckf_node_dpt.cpp)
+target_link_libraries(vslam_msckf_svo ${LINK_LIBS} imu_pub)
 
