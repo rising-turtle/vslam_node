@@ -35,6 +35,7 @@
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
 #include "sensor_fusion_comm/InitScale.h"
+#include "visualizer.h"
 #include "imu_pub.h"
 
 using namespace std; 
@@ -141,6 +142,16 @@ void msckf_node_dpt()
   vk::AbstractCamera* cam_ = NULL ;
   if(!vk::camera_loader::loadFromRosNs("svo", cam_))
     throw std::runtime_error("Camera model not correctly specified.");
+  
+  // visualizer 
+  svo::Visualizer visualizer_; 
+  visualizer_.T_world_from_vision_ = Sophus::SE3(
+      vk::rpy2dcm(Vector3d(vk::getParam<double>("svo/init_rx", 0.0),
+                           vk::getParam<double>("svo/init_ry", 0.0),
+                           vk::getParam<double>("svo/init_rz", 0.0))),
+      Eigen::Vector3d(vk::getParam<double>("svo/init_tx", 0.0),
+                      vk::getParam<double>("svo/init_ty", 0.0),
+                      vk::getParam<double>("svo/init_tz", 0.0)));
 
   // graph gtsam 
   tf::Vector3 Ts2c_v(0.063, -0.001, 0.018); 
@@ -165,7 +176,7 @@ void msckf_node_dpt()
   cv::Mat rgb, gray, dpt; 
   
   // iterate IMG file
-  for(int i=0; i<mvRgb.size() && ros::ok() && i < 7; i++)
+  for(int i=0; i<mvRgb.size() && ros::ok() && i < 7000; i++)
   {
     rgb = cv::imread(data_dir + "/" + mvRgb[i], -1); 
     if(rgb.empty())
@@ -270,10 +281,12 @@ void msckf_node_dpt()
       vo_->addIncPrior(inc_cam_se3); 
 
       // 3. svo produces vo estimation 
-      vo_->addImage(gray, curT.toSec()); 
+      // vo_->addImage(gray, curT.toSec()); 
+      FrameHandlerMono::UpdateResult dropout = vo_->addImageFront(gray, curT.toSec()); 
+      vo_->addImageBack(dropout); 
 
       // 4. publish vo's result 
-      publishVOEstimate(vo_pub, Ts2c, vo_->lastFrame(), curT, (vo_->stage() == FrameHandlerBase::STAGE_DEFAULT_FRAME));
+      publishVOEstimate(vo_pub, Ts2c, vo_->lastFrame(), curT, !(dropout == FrameHandlerBase::RESULT_FAILURE));
       
       // 5. wait for EKF's updation 
       waitForEKFUpdate(curT);  
@@ -281,6 +294,12 @@ void msckf_node_dpt()
       // 6. send for visualization, rqt_vision
       handleResult(g_TF_update, curT); 
     }
+
+    // publish for visualization 
+    visualizer_.publishMinimal(gray, vo_->lastFrame(), *vo_, mvTimeImg[i].toSec());
+    if(vo_->stage() != FrameHandlerBase::STAGE_PAUSED)
+      visualizer_.visualizeMarkers(vo_->lastFrame(), vo_->coreKeyframes(), vo_->map());
+    visualizer_.exportToDense(vo_->lastFrame()); 
 
     ros::spinOnce(); 
     usleep(50*1000); 

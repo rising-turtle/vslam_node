@@ -9,8 +9,8 @@
         <!-- rosparam file="/home/davidz/work/data/sin2_tex2_h1_v8_d/camera_pinhole.yaml" /--> <!--camera_pinhole_R200 camera_atan-->
 
         <!-- following parameters related to feature extraction -->
-        <param name="triang_min_corner_score" value="2.0"/> <!-- "5.0"-->
-        <param name="grid_size"   value="10"/> <!-- 30 20 -->
+        <param name="triang_min_corner_score" value="1.0"/> <!-- "5.0"-->
+        <param name="grid_size"   value="20"/> <!-- 30 20 -->
         <param name="n_pyr_levels" value="7"/> <!-- 5 3  -->
     </node>
   
