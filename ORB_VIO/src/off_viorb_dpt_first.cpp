@@ -119,8 +119,8 @@ int main(int argc, char* argv[])
       cv_bridge::CvImage ss_img;
       ss_img.header.stamp.fromSec(timestamp); 
       ss_img.encoding = sensor_msgs::image_encodings::BGR8; 
-      ss_img.image = img.clone(); 
 
+      ss_img.image = img.clone(); 
       sensor_msgs::Image ros_img; 
       ss_img.toImageMsg(ros_img);
       sensor_msgs::ImageConstPtr simage(new sensor_msgs::Image(ros_img));
@@ -209,7 +209,22 @@ void handleMsg(ORB_SLAM2::System& SLAM, sensor_msgs::ImageConstPtr& imageMsg, st
   cv_bridge::CvImageConstPtr cv_ptr = cv_bridge::toCvShare(imageMsg); 
   cv::Mat im = cv_ptr->image.clone(); 
   
-  SLAM.TrackMonoVI(im, vimuData, imageMsg->header.stamp.toSec()); 
+  // 
+  cv::Mat gray; 
+  if(im.type() != CV_8UC1)
+  {
+    cvtColor(im, gray, CV_RGB2GRAY); 
+  }else
+    gray = im; 
+
+  // histogram equlization 
+  cv::Mat hist_img; 
+  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+  clahe->apply(gray, hist_img);
+
+  // SLAM.TrackMonoVI(im, vimuData, imageMsg->header.stamp.toSec()); 
+  SLAM.TrackMonoVI(hist_img, vimuData, imageMsg->header.stamp.toSec()); 
+
   bool bstop = false; 
   while(!SLAM.bLocalMapAcceptKF())
   {

@@ -95,6 +95,10 @@ TARGET_LINK_LIBRARIES(fast_detector ${LINK_LIBS})
 # ADD_EXECUTABLE(benchmark src/benchmark_node.cpp)
 # TARGET_LINK_LIBRARIES(benchmark svo_visualizer)
 
+# compare good feature detector 
+add_executable(good_feature src/good_feature_for_track.cpp)
+target_link_libraries(good_feature ${LINK_LIBS})
+
 # vio : svo + imu gtsam
 add_executable(vslam_vio_svo src/vio_node_dpt.cpp)
 target_link_libraries(vslam_vio_svo vslam_svo_visualizer) 
@@ -105,4 +109,5 @@ target_link_libraries(vslam_svo_pipeline vslam_svo_visualizer)
 # msckf : svo + imu msckf
 add_executable(vslam_msckf_svo src/msckf_node_dpt.cpp)
 target_link_libraries(vslam_msckf_svo ${LINK_LIBS} imu_pub vslam_svo_visualizer)
+
 

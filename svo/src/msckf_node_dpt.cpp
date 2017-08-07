@@ -173,7 +173,7 @@ void msckf_node_dpt()
   svo::FrameHandlerMono* vo_ = new svo::FrameHandlerMono(cam_);
   vo_->start();
 
-  cv::Mat rgb, gray, dpt; 
+  cv::Mat rgb, gray, dpt, img; 
   
   // iterate IMG file
   for(int i=0; i<mvRgb.size() && ros::ok() && i < 7000; i++)
@@ -190,9 +190,13 @@ void msckf_node_dpt()
     SVO_INFO_STREAM("Handle current data with stamp : "<<curT);
 
     // convert to gray image 
-    gray = rgb; 
-    cvtColor(gray,gray,CV_RGB2GRAY);
+    img = rgb; 
+    cvtColor(img,img,CV_RGB2GRAY);
     
+    // histogram equlization 
+    cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+    clahe->apply(img, gray);
+
     cv::imshow("gray", gray); 
     if(i == 0)
     {

@@ -26,13 +26,17 @@ vk::AbstractCamera* gcam_;
 
 void imgCb(const sensor_msgs::ImageConstPtr& msg)
 {
-  cv::Mat img;
+  cv::Mat _img;
   try {
-    img = cv_bridge::toCvShare(msg, "mono8")->image;
+    _img = cv_bridge::toCvShare(msg, "mono8")->image;
   } catch (cv_bridge::Exception& e) {
     ROS_ERROR("cv_bridge exception: %s", e.what());
   }
   
+  cv::Mat img; 
+  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+  clahe->apply(_img, img); 
+
   svo::FramePtr frame(new svo::Frame(gcam_, img, 0.0)); 
   
   // corner detection 
@@ -45,8 +49,10 @@ void imgCb(const sensor_msgs::ImageConstPtr& msg)
   // show it 
   cv::Mat rgb = cv::Mat(img.size(), CV_8UC3); 
   cv::cvtColor(img, rgb, CV_GRAY2RGB); 
+  // std::for_each(fts.begin(), fts.end(), [&](svo::Feature* i){
+      // cv::circle(rgb, cv::Point2f(i->px[0], i->px[1]), 4*(i->level+1), cv::Scalar(0,255,0), 1); });
   std::for_each(fts.begin(), fts.end(), [&](svo::Feature* i){
-      cv::circle(rgb, cv::Point2f(i->px[0], i->px[1]), 4*(i->level+1), cv::Scalar(0,255,0), 1); });
+      cv::circle(rgb, cv::Point2f(i->px[0], i->px[1]), 2, cv::Scalar(0,0,255), 2); });
   cv::imshow("rgb_fast", rgb); 
   cv::waitKey(10); 
   std::for_each(fts.begin(), fts.end(), [&](svo::Feature* i){delete i;});

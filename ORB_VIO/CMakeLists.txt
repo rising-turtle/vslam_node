@@ -83,5 +83,7 @@ target_link_libraries(viorb ${LIBS} ${catkin_LIBRARIES})
 add_executable(viorb_dpt src/off_viorb_dpt_first.cpp src/imu_vn100.cpp src/MsgSync/MsgSynchronizer.cpp src/MsgSync/MsgSynchronizer.h)
 target_link_libraries(viorb_dpt ${LIBS} ${catkin_LIBRARIES})
 
-
+###### show ORB features 
+add_executable(orb_feature src/orb_feature.cpp)
+target_link_libraries(orb_feature ${LIBS} ${catkin_LIBRARIES})
 

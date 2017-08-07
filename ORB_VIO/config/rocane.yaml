@@ -23,7 +23,6 @@ test.DiscardTime: 0
 # bagfile: "/media/davidz/work/work/data/realsense/ETAS_2F_640_30.bag"
 # bagfile: "/media/davidz/work/work/data/realsense/R200GT_dense_slow_640_06_30.bag"
 # bagfile: "/media/davidz/work/work/data/realsense/etasF4_06_01_01"
-# bagfile: "/home/davidz/work/data/R200GT_dense_slow_640_30"
 bagfile: "/home/davidz/work/data/ETAS_2F_640_30"
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V2_01_easy.bag"
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V1_02_medium.bag"
@@ -56,7 +55,7 @@ Camera.Tbc:
 LocalMapping.LocalWindowSize: 10
 
 # VINS Init Required Time
-LocalMapping.VINSInitTime: 7.
+LocalMapping.VINSInitTime: 7. # 9.
 
 #--------------------------------------------------------------------------------------------
 # Camera Parameters. Adjust them!
