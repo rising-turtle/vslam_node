@@ -162,8 +162,8 @@ void CGraph::firstNode(Node* n)
 
   Vector3 biasAcc(-0.241011, 0.245995, -1.460118);
   Vector3 biasGyro(-0.000420, 0.001610, 0.001331); 
-  // imuBias::ConstantBias priorBias(biasAcc, biasGyro); 
-  imuBias::ConstantBias priorBias; 
+  imuBias::ConstantBias priorBias(biasAcc, biasGyro); 
+  // imuBias::ConstantBias priorBias; 
   mp_node_values->insert(B(n->m_id), priorBias); 
   mp_new_node->insert(B(n->m_id), priorBias); 
 

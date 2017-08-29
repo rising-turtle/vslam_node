@@ -279,15 +279,22 @@ int main(int argc, char **argv)
       // cv::Mat filtered = cv::imread(
       //    path + "/cam" + std::to_string(i) + "/data/" + *cam_iterators.at(i),
       //    cv::IMREAD_GRAYSCALE);
-      cv::Mat rgb = cv::imread(path + "/color" + *cam_iterators.at(i), -1); 
-      cv::Mat filtered = rgb; 
+      // string imdir = path + "/color/" + *cam_iterators.at(i); 
+      // printf("Read img: %s\n", imdir.c_str());
+      cv::Mat rgb = cv::imread(path + "/color/" + *cam_iterators.at(i), -1); 
+      cv::Mat filtered = rgb.clone(); 
       if(rgb.channels() == 3)
         cv::cvtColor(rgb, filtered, CV_BGR2GRAY);
-        
+      // cv::imshow("rgb", rgb); 
+      // cv::waitKey(3); 
+       cv::imshow("grey", filtered); 
+       cv::waitKey(0); 
+
       std::string nanoseconds = cam_iterators.at(i)->substr(
-          cam_iterators.at(i)->size() - 13, 9);
+          // cam_iterators.at(i)->size() - 13, 9);
+          11, 9); 
       std::string seconds = cam_iterators.at(i)->substr(
-          0, cam_iterators.at(i)->size() - 14); // 13 since we have one more '.' 
+          0, 10); // 13 since we have one more '.' 
       t = okvis::Time(std::stoi(seconds), std::stoi(nanoseconds));
       if (start == okvis::Time(0.0)) {
         start = t;
@@ -307,10 +314,10 @@ int main(int argc, char **argv)
         std::string s;
         // std::getline(stream, s, ',');
         std::getline(stream, s, '\t');
-        // std::string nanoseconds = s.substr(s.size() - 9, 9);
-        std::string nanoseconds = s.substr(s.size() - 6, 6);
-        // std::string seconds = s.substr(0, s.size() - 9);
-        std::string seconds = s.substr(0, s.size() - 7);
+        std::string nanoseconds = s.substr(11, 9);
+        // std::string nanoseconds = s.substr(s.size() - 6, 6);
+        std::string seconds = s.substr(0, 10);
+        // std::string seconds = s.substr(0, s.size() - 7);
 
         Eigen::Vector3d acc;
         for (int j = 0; j < 3; ++j) {
@@ -329,9 +336,13 @@ int main(int argc, char **argv)
         t_imu = okvis::Time(std::stoi(seconds), std::stoi(nanoseconds));
 
         // add the IMU measurement for (blocking) processing
-        if (t_imu - start + okvis::Duration(1.0) > deltaT) {
+        // if (t_imu - start + okvis::Duration(0.0) > deltaT) 
+        if (t_imu - start + okvis::Duration(1.0) > deltaT) 
+        {
           okvis_estimator.addImuMeasurement(t_imu, acc, gyr);
         }
+        
+        cout <<"t_imu = "<<t_imu<<" t = "<<t<<endl;
 
       } while (t_imu <= t);
 

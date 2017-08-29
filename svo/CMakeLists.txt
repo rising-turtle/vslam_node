@@ -107,7 +107,9 @@ add_executable(vslam_svo_pipeline src/test_pipeline_visual.cpp )
 target_link_libraries(vslam_svo_pipeline vslam_svo_visualizer)
 
 # msckf : svo + imu msckf
-add_executable(vslam_msckf_svo src/msckf_node_dpt.cpp)
-target_link_libraries(vslam_msckf_svo ${LINK_LIBS} imu_pub vslam_svo_visualizer)
+add_executable(vslam_msckf_svo_dpt src/msckf_node_dpt.cpp)
+target_link_libraries(vslam_msckf_svo_dpt ${LINK_LIBS} imu_pub vslam_svo_visualizer)
 
+add_executable(vslam_msckf_svo src/msckf_node.cpp)
+target_link_libraries(vslam_msckf_svo ${LINK_LIBS} imu_pub vslam_svo_visualizer)
 

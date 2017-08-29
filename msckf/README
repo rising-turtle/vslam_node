@@ -1,4 +1,0 @@
-For msckf_svo.launch
-
-1. roslaunch msckf_svo.launch
-2. rosrun rviz rviz -d svo_tf.rviz 
