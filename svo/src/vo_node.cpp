@@ -118,6 +118,13 @@ void VoNode::imgCb(const sensor_msgs::ImageConstPtr& msg)
     ROS_ERROR("cv_bridge exception: %s", e.what());
   }
   processUserActions();
+
+  // histogram equalization 
+  cv::Mat img_heq;  
+  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+  clahe->apply(img, img_heq); 
+  img = img_heq; 
+
   vo_->addImage(img, msg->header.stamp.toSec());
   visualizer_.publishMinimal(img, vo_->lastFrame(), *vo_, msg->header.stamp.toSec());
 
