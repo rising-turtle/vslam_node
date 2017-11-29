@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
   np.param("bot_right_u", eu, rs_F200.m_cols); 
   np.param("bot_right_v", ev, rs_F200.m_rows); 
   */
+    ROS_WARN("usage: ./vins-mapping [traj_file] [img_dir]"); 
 
   if(argc >= 2)
     g_traj_log = string(argv[1]);
@@ -332,6 +333,14 @@ bool associateData(vector<obsItem>& vobs)
   return associateItem(vobs, vts, mv_timestamp, mv_rgb, mv_dpt); 
 }
 
+inline bool sameTime(string t1, string t2)
+{
+    double dt1 = atof(t1.c_str()); 
+    double dt2 = atof(t2.c_str()); 
+    if(fabs(dt1-dt2) < 1e-3) return true; 
+    return false;
+}
+
 bool associateItem(vector<obsItem>& vobs, vector<trajItem>& vts, vector<string>& mv_timestamp, vector<string>& mv_rgb, vector<string>& mv_dpt)
 {
   // test 
@@ -346,12 +355,17 @@ bool associateItem(vector<obsItem>& vobs, vector<trajItem>& vts, vector<string>&
     for(; j<mv_timestamp.size(); j++)
     {
       string tj = mv_timestamp[j]; 
-      if(tj == ti)
+      // if(tj == ti)
+      if(sameTime(tj, ti))
       {
         obs.frgb = mv_rgb[j]; 
         obs.fdpt = mv_dpt[j]; 
         // ouf <<ti<<"\t"<<obs.frgb<<"\t"<<obs.fdpt<<endl;
         break; 
+      }
+      if(j == mv_timestamp.size() - 1)
+      {
+	ROS_ERROR("ti = %s tj = %s cannot find match !", ti.c_str(), tj.c_str()); 
       }
     }
     lj = j; 
