@@ -219,17 +219,20 @@ void handleMsg(ORB_SLAM2::System& SLAM, sensor_msgs::ImageConstPtr& imageMsg, st
 
   // histogram equlization 
   cv::Mat hist_img; 
-  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
-  clahe->apply(gray, hist_img);
+  // cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+  // clahe->apply(gray, hist_img);
+  hist_img = gray; 
 
   // SLAM.TrackMonoVI(im, vimuData, imageMsg->header.stamp.toSec()); 
   SLAM.TrackMonoVI(hist_img, vimuData, imageMsg->header.stamp.toSec()); 
 
   bool bstop = false; 
+  usleep(1000*3); 
   while(!SLAM.bLocalMapAcceptKF())
   {
     if(!ros::ok())
       g_stop = true; 
+    usleep(10);
   }
   return ; 
 }

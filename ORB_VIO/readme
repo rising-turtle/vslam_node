@@ -1,0 +1,8 @@
+
+to run it
+
+roslaunch test_rocane.launch
+
+* Con_file: contains the parameters to be tuned 
+* IMU's parameters are declared in imudata.cpp stored in VIORB'folder e.g. 3rdlibs/LearnVIORB
+

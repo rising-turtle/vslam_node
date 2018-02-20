@@ -23,7 +23,13 @@ test.DiscardTime: 0
 # bagfile: "/media/davidz/work/work/data/realsense/ETAS_2F_640_30.bag"
 # bagfile: "/media/davidz/work/work/data/realsense/R200GT_dense_slow_640_06_30.bag"
 # bagfile: "/media/davidz/work/work/data/realsense/etasF4_06_01_01"
-bagfile: "/home/davidz/work/data/ETAS_2F_640_30"
+# bagfile: "/home/davidz/work/data/ETAS_F2_640_30"
+# bagfile: "/home/davidz/work/data/ETAS_2F_640_30"
+bagfile: "/home/davidz/work/data/R200GT_dense_slow_640"
+
+# bagfile: "/home/davidz/work/data/ETAS_F5_640_30"
+# bagfile: "/home/davidz/work/data/ETAS_F4_640_30"
+
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V2_01_easy.bag"
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V1_02_medium.bag"
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V1_01_easy.bag"
@@ -55,7 +61,7 @@ Camera.Tbc:
 LocalMapping.LocalWindowSize: 10
 
 # VINS Init Required Time
-LocalMapping.VINSInitTime: 7. # 9.
+LocalMapping.VINSInitTime: 15. # 15. # 9.
 
 #--------------------------------------------------------------------------------------------
 # Camera Parameters. Adjust them!
@@ -107,8 +113,8 @@ ORBextractor.nLevels: 8
 # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
 # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
 # You can lower these values if your images have low contrast   
-ORBextractor.iniThFAST: 20
-ORBextractor.minThFAST: 7
+ORBextractor.iniThFAST: 20 # 20
+ORBextractor.minThFAST: 7 # 7 
 
 #--------------------------------------------------------------------------------------------
 # Viewer Parameters

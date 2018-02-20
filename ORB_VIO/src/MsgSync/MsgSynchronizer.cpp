@@ -114,7 +114,7 @@ bool MsgSynchronizer::getRecentMsgs(sensor_msgs::ImageConstPtr &imgmsg, std::vec
     if(vimumsgs.size()>10)
         ROS_WARN("%lu imu messages between images, note",vimumsgs.size());
     if(vimumsgs.size()==0)
-        ROS_ERROR("no imu message between images!");
+        ROS_ERROR_STREAM("no imu message between images! img timestamp: "<<imgmsg->header.stamp);
 
     return true;
 }
