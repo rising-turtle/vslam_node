@@ -315,7 +315,7 @@ int main(int argc, char **argv)
       // cv::imshow("rgb", rgb); 
       // cv::waitKey(3); 
        cv::imshow("grey", filtered); 
-       if(counter < 20)
+       if(counter < 3)
         cv::waitKey(0); 
        else
         cv::waitKey(50); 
@@ -367,12 +367,13 @@ int main(int argc, char **argv)
 
         // add the IMU measurement for (blocking) processing
         // if (t_imu - start + okvis::Duration(0.0) > deltaT) 
-        if (t_imu - start + okvis::Duration(1.0) > deltaT) 
+        // if (t_imu - start + okvis::Duration(1.0) > deltaT) 
+	// if()
         {
           okvis_estimator.addImuMeasurement(t_imu, acc, gyr);
         }
         
-        cout <<"t_imu = "<<t_imu<<" t = "<<t<<endl;
+        // cout <<"t_imu = "<<t_imu<<" t = "<<t<<endl;
 
       } while (t_imu <= t);
 

@@ -13,8 +13,8 @@ cameras:
 
 camera_params:
     camera_rate: 30 # 20 just to manage the expectations of when there should be frames arriving
-    sigma_absolute_translation: 0.0 # The standard deviation of the camera extrinsics translation, e.g. 1.0e-10 for online-calib [m].
-    sigma_absolute_orientation: 0.0 # The standard deviation of the camera extrinsics orientation, e.g. 1.0e-3 for online-calib [rad].
+    sigma_absolute_translation: 1.0e-2 # 0.0 # The standard deviation of the camera extrinsics translation, e.g. 1.0e-10 for online-calib [m].
+    sigma_absolute_orientation: 1.0e-3 # 0.0 # The standard deviation of the camera extrinsics orientation, e.g. 1.0e-3 for online-calib [rad].
     sigma_c_relative_translation: 0.0 # The std. dev. of the cam. extr. transl. change between frames, e.g. 1.0e-6 for adaptive online calib (not less for numerics) [m].
     sigma_c_relative_orientation: 0.0 # The std. dev. of the cam. extr. orient. change between frames, e.g. 1.0e-6 for adaptive online calib (not less for numerics) [rad].
     timestamp_tolerance: 0.005 # [s] stereo frame out-of-sync tolerance
@@ -23,12 +23,12 @@ camera_params:
 imu_params:
     a_max: 157.0 # 16g acceleration saturation [m/s^2]
     g_max: 34.9 # 2000'/s gyro saturation [rad/s]
-    sigma_g_c: 0.002 # 12.0e-4  gyro noise density [rad/s/sqrt(Hz)]
+    sigma_g_c: 0.0006 # 12.0e-4  gyro noise density [rad/s/sqrt(Hz)]
     sigma_a_c: 0.014 # 8.0e-3 # accelerometer noise density [m/s^2/sqrt(Hz)]
-    sigma_bg: 0.0004 # 0.03 gyro bias prior [rad/s]
-    sigma_ba: 5.0e-5 # 0.1 accelerometer bias prior [m/s^2]
-    sigma_gw_c: 0.34e-5 # 4.0e-6 # gyro drift noise density [rad/s^s/sqrt(Hz)]
-    sigma_aw_c: 0.28e-4 # 4.0e-5 # accelerometer drift noise density [m/s^2/sqrt(Hz)]
+    sigma_bg: 0.0001 # 0.03 gyro bias prior [rad/s]
+    sigma_ba: 1.0e-5 # 0.1 accelerometer bias prior [m/s^2]
+    sigma_gw_c: 0.00003428 # 4.0e-6 # gyro drift noise density [rad/s^s/sqrt(Hz)]
+    sigma_aw_c: 0.000277 # 4.0e-5 # accelerometer drift noise density [m/s^2/sqrt(Hz)]
     tau: 3600.0 # reversion time constant, currently not in use [s]
     g: 9.81007 # Earth's acceleration due to gravity [m/s^2]
     a0: [ 0.0, 0.0, 0.0 ] # Accelerometer bias [m/s^2]
@@ -46,7 +46,7 @@ numImuFrames: 3 # number of frames linked by most recent nonlinear IMU error ter
 
 # ceres optimization options
 ceres_options:
-    minIterations: 3   # minimum number of iterations always performed
+    minIterations: 5 # 3   # minimum number of iterations always performed
     maxIterations: 10  # never do more than these, even if not converged
     timeLimit: 0.035   # [s] negative values will set the an unlimited time limit
 
