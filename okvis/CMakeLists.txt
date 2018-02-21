@@ -21,12 +21,13 @@ FIND_PACKAGE(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   cv_bridge
+  tf
   )
 
 # Describe catkin Project
 catkin_package(
 #  DEPENDS Eigen OpenCV Sophus Boost
-  CATKIN_DEPENDS roscpp nav_msgs std_msgs sensor_msgs cv_bridge  
+  CATKIN_DEPENDS roscpp nav_msgs std_msgs sensor_msgs cv_bridge tf
 #  INCLUDE_DIRS include
 #  LIBRARIES svo_visualizer
 )
