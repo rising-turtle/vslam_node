@@ -10,8 +10,8 @@ output_path: "vins_result.csv"         # vins outputs will be wrttento vins_fold
 #camera calibration 
 model_type: PINHOLE
 camera_name: camera
-image_width: 640
-image_height: 480
+image_width: 320 # 640
+image_height: 240 # 480
 distortion_parameters:
    k1: 0.
    k2: 0.
@@ -19,10 +19,10 @@ distortion_parameters:
    p2: 0.
 projection_parameters: 
   #  615.426, 625.456, 318.837, 240.594
-   fx: 615.426
-   fy: 625.456
-   cx: 318.837
-   cy: 240.594
+   fx: 307.713 # 615.426
+   fy: 312.728 # 625.456
+   cx: 159.4185 # 318.837
+   cy: 120.297 # 240.594
 
 # Extrinsic parameter between IMU and Camera.
 estimate_extrinsic: 1 #1   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
@@ -47,9 +47,9 @@ extrinsicTranslation: !!opencv-matrix
    data: [0.063, -0.001, 0.018]
 
 #feature traker paprameters
-max_cnt: 150  # 150          # max feature number in feature tracking
-min_dist: 30  # 30          # min distance between two features 
-freq: 10 # 10                # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
+max_cnt: 100  # 150          # max feature number in feature tracking
+min_dist: 15  # 30          # min distance between two features 
+freq: 30 # 10                # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
 F_threshold: 3.0 # 2.0 1.0        # ransac threshold (pixel)
 show_track: 1           # publish tracking image as topic
 equalize: 1             # 1 if image is too dark or light, trun on equalize to find enough features
