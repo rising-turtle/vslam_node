@@ -60,6 +60,9 @@
 #include <okvis/ThreadedKFVio.hpp>
 
 #include <boost/filesystem.hpp>
+#include <fstream>
+
+using namespace std; 
 
 class PoseViewer
 {
@@ -72,10 +75,29 @@ class PoseViewer
     _image.create(imageSize, imageSize, CV_8UC3);
     drawing_ = false;
     showing_ = false;
+    pLog = new ofstream("result_okvis_euroc.log"); 
   }
+  // dump into file 
+  void dumpResult(const okvis::Time& t, Eigen::Vector3d& p, Eigen::Matrix3d& R)
+  {
+    if(pLog == 0 || !pLog->is_open())
+    {
+      cerr <<" okvis_ros_node.cpp: failed to open file result_okvis.log"<<endl; 
+      return ; 
+    }
+    
+    // compute quaternion 
+    Eigen::Quaterniond Q(R); 
+    Q.normalize(); 
+    
+    (*pLog) << std::fixed<<t<<","<<p(0)<<","<<p(1)<<","<<p(2)<<","<<Q.w()<<","<<Q.x()<<","<<Q.y()<<","<<Q.z()<<endl;
+    return ; 
+  }
+
+
   // this we can register as a callback
   void publishFullStateAsCallback(
-      const okvis::Time & /*t*/, const okvis::kinematics::Transformation & T_WS,
+      const okvis::Time & t, const okvis::kinematics::Transformation & T_WS,
       const Eigen::Matrix<double, 9, 1> & speedAndBiases,
       const Eigen::Matrix<double, 3, 1> & /*omega_S*/)
   {
@@ -139,6 +161,9 @@ class PoseViewer
     veltext << "velocity = [" << speedAndBiases[0] << ", " << speedAndBiases[1] << ", " << speedAndBiases[2] << "]";
     cv::putText(_image, veltext.str(), cv::Point(15,35),
                     cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar(255,255,255), 1);
+    
+    // save trajectory 
+    dumpResult(t, r, C); 
 
     drawing_ = false; // notify
   }
@@ -183,6 +208,7 @@ class PoseViewer
   cv::Mat _image;
   std::vector<cv::Point2d> _path;
   std::vector<double> _heights;
+  std::ofstream * pLog;
   double _scale = 1.0;
   double _min_x = -0.5;
   double _min_y = -0.5;

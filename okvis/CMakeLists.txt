@@ -84,8 +84,27 @@ endif()
     ${Boost_LIBRARIES}
     ${catkin_LIBRARIES}
   )
+    
+add_executable(vslam_okvis_euroc src/okvis_app.cpp)
+target_link_libraries(vslam_okvis_euroc
+    okvis_util
+    okvis_kinematics
+    okvis_time
+    okvis_cv 
+    okvis_common
+    okvis_ceres
+    okvis_timing
+    okvis_matcher
+    okvis_frontend 
+    okvis_multisensor_processing
+    pthread 
+    ${Boost_LIBRARIES}
+    ${catkin_LIBRARIES}
+)
+
   if(${VISENSORDRIVER_FOUND})
     target_link_libraries(vslam_okvis ${VISensorDriver_LIBRARY})
+    target_link_libraries(vslam_okvis_euroc ${VISensorDriver_LIBRARY})
   endif()
 
 
