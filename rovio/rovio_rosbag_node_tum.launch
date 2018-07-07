@@ -11,5 +11,6 @@
   <param name="imu_topic_name" value="/imu0"/>
   <param name="cam0_topic_name" value="/cam0/image_raw"/>
   <param name="cam1_topic_name" value="/cam1/image_raw"/>
+  <param name="record_odometry" value="true"/>
   </node>
 </launch>

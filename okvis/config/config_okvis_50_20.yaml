@@ -72,7 +72,7 @@ detection_options:
 imageDelay: 0.0  # in case you are using a custom setup, you will have to calibrate this. 0 for the VISensor.
 
 # display debug images?
-displayImages: false  # displays debug video and keyframe matches. May be slow.
+displayImages: true # false  # displays debug video and keyframe matches. May be slow.
 
 # use direct driver
 useDriver: true 
