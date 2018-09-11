@@ -38,7 +38,8 @@ void imgCb(const sensor_msgs::ImageConstPtr& msg)
   clahe->apply(_img, img); 
 
   svo::FramePtr frame(new svo::Frame(gcam_, img, 0.0)); 
-  
+  // svo::FramePtr frame(new svo::Frame(gcam_, _img, 0.0)); 
+
   // corner detection 
   svo::Features fts;
   svo::feature_detection::FastDetector fast_detector(

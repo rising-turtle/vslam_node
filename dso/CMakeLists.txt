@@ -49,7 +49,8 @@ find_package(OpenCV REQUIRED)
 message("\n\n---- FOUND OpenCV Headers at\n\"${OpenCV_INCLUDE_DIRS}\"")
 message("---- FOUND OpenCV Libs at\n\"${OpenCV_LIBS}\"")
 
-find_package(Eigen3 REQUIRED)
+# find_package(Eigen3 REQUIRED)
+include_directories("/usr/include/eigen3")
 find_package(Boost COMPONENTS system thread) 
 find_library(DSO_LIBRARY dso ${DSO_PATH}/build/lib)
 

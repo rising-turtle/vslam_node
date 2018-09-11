@@ -10,7 +10,7 @@
 
     </node>
   
-  <node pkg="img_pub" type="test_pub_realsense" name="test_img_pub_realsense" output="screen">
+  <node pkg="img_pub" type="test_pub_rgbd" name="test_img_pub_realsense" output="screen">
       <param name="data_dir" value="/home/davidz/work/data/sin2_tex2_h1_v8_d/img"/>
       <param name="data_dir" value="/media/davidz/work/work/data/realsense/hotel"/>
       <param name="data_dir" value="/media/davidz/work/work/data/rgbd/rgbd_dataset_freiburg1_desk"/>
@@ -18,6 +18,7 @@
       <param name="data_dir" value="/media/davidz/work/work/data/rgbd/rgbd_dataset_freiburg2_desk"/>
       <param name="data_dir" value="/media/davidz/work/work/data/realsense/etasF4_06_01_01"/>
       <param name="data_dir" value="/home/davidz/work/data/ETAS_2F_640_30"/>
+      <param name="data_dir" value="/home/davidz/work/data/up/320_60"/>
   </node>
 
 </launch>

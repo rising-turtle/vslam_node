@@ -44,7 +44,8 @@ catkin_package(
 )
 
 find_package(OpenCV 2.4.3 REQUIRED)
-find_package(Eigen3 3.1.0 REQUIRED)
+# find_package(Eigen3 3.1.0 REQUIRED)
+include_directories("/usr/include/eigen3")
 find_package(Pangolin REQUIRED)
 
 # relate to the previous project 

@@ -5,7 +5,7 @@
     <param name="publish_dense_input" value="true"/>
 
     <!-- Camera calibration file -->
-    <rosparam file="$(find vslam_svo)/param/atan.yaml" /> <!-- R200.yaml TUM2.yaml -->
+    <rosparam file="$(find vslam_svo)/param/R200_jin.yaml" /> <!-- atan.yaml R200.yaml TUM2.yaml -->
    
     <!-- Initial camera orientation, make it point downwards -->
     <param name="init_rx" value="0.00" /> <!-- 3.14 -->
@@ -13,12 +13,12 @@
     <param name="init_rz" value="0.00" />
 
     <!-- following parameters related to feature extraction  -->
-    <param name="triang_min_corner_score" value="7.0"/> <!-- threshold for fast detection-->
-    <param name="grid_size"   value="30"/> <!-- 30 20 -->
-    <param name="n_pyr_levels" value="3"/> <!-- 5 3  -->
+    <param name="triang_min_corner_score" value="3.0"/> <!-- threshold for fast detection-->
+    <param name="grid_size"   value="20"/> <!-- 30 20 -->
+    <param name="n_pyr_levels" value="7"/> <!-- 5 3  -->
 
     <!-- following parameters related to feature tracking  -->
-    <param name="max_fts" value="120"/> <!-- 270 maximum tracked feature for each frame -->
+    <param name="max_fts" value="270"/> <!-- 270 maximum tracked feature for each frame -->
     <param name="reproj_thresh"   value="2.0"/> <!-- 5.-->
     <param name="poseoptim_thresh" value="2.0"/> <!-- 5.0 reprojection error threshold for feature match--> 
 
@@ -31,7 +31,7 @@
     <param name="loba_robust_huber_width" value="1."/> <!-- 3. -->
     
   <!-- following are thresholds determine the success of vo tracking-->
-    <param name="init_min_disparity" value="50"/> <!-- 30 -->
+    <param name="init_min_disparity" value="40"/> <!-- 30 -->
     <param name="init_min_inliers" value="40"/> <!-- 30 -->
     <param name="quality_min_fts" value="50"/> <!-- number of matched features, if too small will result in crazy jump-->
     <param name="quality_max_drop_fts" value="40"/> <!-- if the number of dropped features below this threshold, start relocalization -->
