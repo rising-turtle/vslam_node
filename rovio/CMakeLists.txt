@@ -26,7 +26,7 @@ catkin_package(
 
 # boost
 find_package(Boost COMPONENTS filesystem system REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS}) 
+include_directories(${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS}) 
 
 add_executable(traj_bag_to_log src/traj_bag_to_log.cpp)
 target_link_libraries(traj_bag_to_log ${catkin_LIBRARIES})

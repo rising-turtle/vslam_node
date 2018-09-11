@@ -33,7 +33,8 @@ catkin_package(
 )
 
 # set(OKVIS_INSTALLATION <path/to/install>) # point to installation
-set(OKVIS_INSTALLATION "/home/davidz/work/3rdlibs/okvis/build")
+# set(OKVIS_INSTALLATION "/home/davidz/work/3rdlibs/okvis/build")
+set(OKVIS_INSTALLATION "/home/hzhang8/work/3rdlib/okvis/build")
 
 # require OpenCV
 find_package( OpenCV COMPONENTS core highgui imgproc features2d REQUIRED )

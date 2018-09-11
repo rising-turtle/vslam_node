@@ -1,5 +1,0 @@
-run steps:
-
-./dso_offline mode=1
-mode = 2 means // 1, without photometric calibration, 0 with photometric calibration, 2 perfect image data 
-

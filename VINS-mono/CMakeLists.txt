@@ -35,7 +35,7 @@ catkin_package(
 
 # require OpenCV
 find_package( OpenCV COMPONENTS core highgui imgproc features2d REQUIRED )
-include_directories(${OpenCV_INCLUDE_DIRS}) 
+include_directories(${OpenCV_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS}) 
 
 # boost
 find_package(Boost COMPONENTS filesystem system REQUIRED)
