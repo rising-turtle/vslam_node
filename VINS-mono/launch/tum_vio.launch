@@ -1,7 +1,11 @@
 <launch>
+
+    <arg name="vins_folder" default="$(find vslam_vins)"/>
     <arg name="config_path" default = "$(find vslam_vins)/config/tum_vio_config.yaml" />
     <arg name="vins_path" default = "$(find vslam_vins)/../result/" />
-    
+   
+    <!--include file="$(arg vins_folder)/launch/vins_rviz_ext_compare.launch"/-->
+
     <node name="feature_tracker" pkg="feature_tracker" type="feature_tracker" output="screen">
         <param name="config_file" type="string" value="$(arg config_path)" />
         <param name="vins_folder" type="string" value="$(arg vins_path)" />

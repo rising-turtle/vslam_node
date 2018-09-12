@@ -318,14 +318,14 @@ int main(int argc, char **argv)
   int counter = 0;
   okvis::Time start(0.0);
   while (true) {
-    okvis_estimator.display();
-    poseViewer.display();
+    // okvis_estimator.display();
+    // poseViewer.display();
 
     // check if at the end
     for (size_t i = 0; i < numCameras; ++i) {
       if (cam_iterators[i] == image_names[i].end()) {
         std::cout << std::endl << "Finished. Press any key to exit." << std::endl << std::flush;
-        cv::waitKey();
+        // cv::waitKey();
         return 0;
       }
     }

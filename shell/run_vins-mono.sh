@@ -15,7 +15,7 @@ rosbag_name="room4_512_16"
 roslaunch_file="$cur_dir/../VINS-mono/launch/tum_vio.launch"
 result_dir="$cur_dir/../result"
 
-times=2
+times_=2
 
 if [ $# -ge 1 ]; then
     # rosbag_file=$1
@@ -31,6 +31,8 @@ if [ $# -ge 3 ]; then
     echo "reset run times: $times_"
 fi
 
+rosbag_file="$rosbag_dir/dataset-$rosbag_name.bag" 
+
 do_it(){
     i=$1
     echo "roslaunch $roslaunch_file"
@@ -44,7 +46,8 @@ do_it(){
     sleep 5 
 
     echo "rosbag play $rosbag_file"
-    rosbag play -u 30 $rosbag_file --r=0.85 >/dev/null 2>&1
+    # rosbag play -u 30 $rosbag_file --r=0.85 >/dev/null 2>&1
+    rosbag play $rosbag_file --r=0.85 >/dev/null 2>&1
     echo "finish rosbag play!"
 
     # Kill progresse
@@ -57,16 +60,16 @@ do_it(){
     ### process the result 
     cd $result_dir
     echo "handle $result_dir"
-    if [ ! -d "tum_vio_result/$rosbag_name/vins-mono_ext" ]; then
-	mkdir -p "tum_vio_result/$rosbag_name/vins-mono_ext"
+    if [ ! -d "tum_vio_result/$rosbag_name/vins-mono" ]; then
+	mkdir -p "tum_vio_result/$rosbag_name/vins-mono"
     fi
-    cp "vins_result.log" "tum_vio_result/$rosbag_name/vins-mono_ext/result_$i.log"
+    cp "vins_result.log" "tum_vio_result/$rosbag_name/vins-mono/result_$i.log"
 
     echo -ne '\n'
 }
 
 i=1
-while [ $i -le $times ]; do
+while [ $i -le $times_ ]; do
     echo "vins-mono $i"
     do_it $i
     i=$((i+1))

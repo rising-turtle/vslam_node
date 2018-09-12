@@ -13,7 +13,7 @@ rosbag_dir="/home/hzhang8/work/data/tum_vio"
 rosbag_name="room4_512_16"
 # rosbag_file="/home/hzhang8/work/data/tum_vio/dataset-room4_512_16.bag"
 # roslaunch_file="/home/davidz/work/ros/indigo/src/VINS-Mono_Ext/launch/run_tum_vio/run_together_no_view.launch"
-roslaunch_file="../VINS-Mono_Ext/launch/run_together_no_view.launch"
+roslaunch_file="$cur_dir/../VINS-Mono_Ext/launch/run_together_no_view.launch"
 result_dir="$cur_dir/../result"
 
 times_=2
@@ -31,8 +31,11 @@ if [ $# -ge 2 ]; then
 fi
 if [ $# -ge 3 ]; then
     times_=$3
+    # times_=$((times_))
     echo "reset run times: $times_"
 fi
+
+rosbag_file="$rosbag_dir/dataset-$rosbag_name.bag" 
 
 do_it(){
     i=$1
@@ -45,10 +48,10 @@ do_it(){
 
     # wait for roslaunch start 
     sleep 5
-    
-    rosbag_file="$rosbag_dir/dataset-$rosbag_name.bag" 
+
     echo "rosbag play $rosbag_file"
-    rosbag play $rosbag_file -u 10 --r=0.85 #>/dev/null 2>&1
+    # rosbag play $rosbag_file -u 10 --r=0.85 #>/dev/null 2>&1
+    rosbag play $rosbag_file --r=0.85 #>/dev/null 2>&1
     echo "finish rosbag play!"
 
     # Kill progresse
