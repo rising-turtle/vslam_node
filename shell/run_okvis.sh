@@ -40,7 +40,7 @@ do_it(){
     i=$1
     echo "./vslam_okvis_euroc $config_file $data_file_dir"
     cd $exec_dir
-    roslaunch $roslaunch_file bag_file:=$rosbag_file >/dev/null 2>&1
+    # roslaunch $roslaunch_file bag_file:=$rosbag_file >/dev/null 2>&1
     ./vslam_okvis_euroc $config_file $data_file_dir
 
     ### handle result 
