@@ -26,7 +26,9 @@ test.DiscardTime: 0
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/MH_01_easy.bag"
 # bagfile: "/home/davidz/work/data/EuRoC-VIO/V2_02_medium.bag"
 # bagfile: "/home/davidz/work/data/EuRoC-VIO/V2_02_medium.bag"
-bagfile: "/media/davidz/Seagate Backup Plus Drive/dataset/euroc/MH_02_easy.bag"
+# bagfile: "/media/davidz/Seagate Backup Plus Drive/dataset/euroc/MH_02_easy.bag"
+bagfile: "/media/davidz/Course/euroc/MH_02_easy.bag"
+
 
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V2_01_easy.bag"
 #bagfile: "/media/jp/JingpangPassport/3dataset/EuRoC-VIO/un_restamped/V1_02_medium.bag"

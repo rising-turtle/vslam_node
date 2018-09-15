@@ -89,3 +89,6 @@ target_link_libraries(viorb ${LIBS} ${catkin_LIBRARIES})
 add_executable(orb_feature src/orb_feature.cpp)
 target_link_libraries(orb_feature ${LIBS} ${catkin_LIBRARIES})
 
+###### test ORB match #####
+add_executable(orb_match src/orb_match.cpp src/orb_matcher.cpp src/frame.cpp)
+target_link_libraries(orb_match ${LIBS})

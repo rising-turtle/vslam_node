@@ -2,7 +2,7 @@
   
     <node pkg="vslam_viorb" type="orb_feature" name="orb_feature" clear_params="true" output="screen">
 
-        <param name="cam_topic" value="/rgb"/>
+        <param name="cam_topic" value="/rgb"/> <!-- /rgb -->
         <param name="config_yaml" value="/home/davidz/work/ros/indigo/src/vslam_node/ORB_VIO/config/orb_extractor.yaml"/>
         <!-- Camera calibration file -->
         <!-- rosparam file="$(find vslam_svo)/param/R200.yaml" /--> <!-- TUM1.yaml-->

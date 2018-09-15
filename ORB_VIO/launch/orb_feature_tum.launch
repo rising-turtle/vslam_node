@@ -1,0 +1,14 @@
+<launch>
+  
+    <node pkg="vslam_viorb" type="orb_feature" name="orb_feature" clear_params="true" output="screen">
+
+        <param name="cam_topic" value="/cam0/image_raw"/> <!-- /rgb -->
+        <param name="config_yaml" value="/home/davidz/work/ros/indigo/src/vslam_node/ORB_VIO/config/orb_extractor.yaml"/>
+        <!-- Camera calibration file -->
+        <!-- rosparam file="$(find vslam_svo)/param/R200.yaml" /--> <!-- TUM1.yaml-->
+        <!-- rosparam file="/home/davidz/work/data/sin2_tex2_h1_v8_d/camera_pinhole.yaml" /--> <!--camera_pinhole_R200 camera_atan-->
+
+    </node>
+  
+
+</launch>
