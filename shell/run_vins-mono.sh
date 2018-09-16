@@ -63,7 +63,7 @@ do_it(){
     if [ ! -d "tum_vio_result/$rosbag_name/vins-mono" ]; then
 	mkdir -p "tum_vio_result/$rosbag_name/vins-mono"
     fi
-    cp "vins_result.log" "tum_vio_result/$rosbag_name/vins-mono/result_$i.log"
+    cp "vins_result_no_loop.csv" "tum_vio_result/$rosbag_name/vins-mono/result_$i.log"
 
     echo -ne '\n'
 }

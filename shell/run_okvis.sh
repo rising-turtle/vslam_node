@@ -11,13 +11,14 @@ cur_dir=`pwd`
 # rosbag_file="/home/davidz/work/data/drone/dataset_3/rgbd_imu.bag"
 # rosbag_file="/home/hzhang8/work/data/tum_vio/dataset-room4_512_16.bag"
 rosbag_dir="/home/hzhang8/work/data/tum_vio"
-rosbag_name="room4_512_16"
+# rosbag_name="room4_512_16"
+rosbag_name="corridor2_512_16"
 # roslaunch_file="$cur_dir/../rovio/rovio_rosbag_node_tum.launch"
 config_file="$cur_dir/../okvis/config/config_okvis_50_20_mono.yaml"
 result_dir="$cur_dir/../result"
 exec_dir="$cur_dir/../../../devel/lib/vslam_okvis/"
 
-times_=2
+times_=3
 
 if [ $# -ge 1 ]; then
     # rosbag_file=$1
@@ -54,7 +55,8 @@ do_it(){
 	mkdir -p "tum_vio_result/$rosbag_name/okvis"
     fi
      
-    cp "okvis_result.log" "tum_vio_result/$rosbag_name/okvis/result_$i.log"
+    j=$((i+5))
+    cp "okvis_result.log" "tum_vio_result/$rosbag_name/okvis/result_$j.log"
 
     echo -ne '\n'
 }
