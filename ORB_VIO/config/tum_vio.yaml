@@ -28,7 +28,8 @@ test.DiscardTime: 0
 # bagfile: "/home/davidz/work/data/ETAS_F2_640_30"
 # bagfile: "/media/davidz/Seagate Backup Plus Drive/dataset/tum_vio/dataset-room1_512_16.bag"
 # bagfile: "/media/davidz/Course/tum_vio/dataset-room4_512_16.bag"
-bagfile: "/media/davidz/Seagate Backup Plus Drive/dataset/tum_vio/dataset-room2_512_16.bag"
+# bagfile: "/media/davidz/Seagate Backup Plus Drive/dataset/tum_vio/dataset-room6_512_16.bag"
+bagfile: "/media/davidz/Seagate Backup Plus Drive/dataset/tum_vio/dataset-corridor3_512_16.bag"
 
 
 #######################################

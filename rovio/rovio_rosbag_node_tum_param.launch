@@ -8,7 +8,7 @@
   <param name="camera0_config" value="$(arg rovio_path)/cfg/rovio_cam0.yaml"/>
   <param name="camera1_config" value="$(arg rovio_path)/cfg/rovio_cam1.yaml"/>
   <!--param name="rosbag_filename" value="/home/davidz/work/data/tum_dataset/dataset-corridor4_512_16/dataset-corridor4_512_16.bag"/-->
-  <param name="rosbag_filename" value="/media/davidz/Seagate Backup Plus Drive/dataset/tum_vio/dataset-room4_512_16.bag"/>
+  <param name="rosbag_filename" value="$(arg bag_file)"/>
   <param name="filename_out" value="$(arg rovio_path)/../result/rovio_result"/>
   <param name="imu_topic_name" value="/imu0"/>
   <param name="cam0_topic_name" value="/cam0/image_raw"/>
