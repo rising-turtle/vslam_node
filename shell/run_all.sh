@@ -13,9 +13,15 @@ rosbag_dir="/home/hzhang8/work/data/tum_vio"
 # corridor1 corridor2 corridor3 corridor4 corridor5 room1 magistrale1 
 # rosbag_name_list="room2 room3 room4 room5 room6 magistrale2 magistrale3 magistrale4 magistrale5 magistrale6 outdoors1 outdoors2 outdoors3 outdoors4 outdoors5 outdoors6 outdoors7 outdoors8 slides1 slides2 slides3"
 
-rosbag_name_list="room1 room2 room3 room4 room5 room6 corridor3 corridor4 corridor5 magistrale1 magistrale2 magistrale3 magistrale4 magistrale5 magistrale6 slides1 slides2 slides3 outdoors1 outdoors2 outdoors3 outdoors4 outdoors5 outdoors6 outdoors7"
+# rosbag_name_list="room1 room2 room3 room4 room5 room6 corridor3 corridor4 corridor5 magistrale1 magistrale2 magistrale3 magistrale4 magistrale5 magistrale6 slides1 slides2 slides3 outdoors1 outdoors2 outdoors3 outdoors4 outdoors5 outdoors6 outdoors7"
 
-times=5
+# rosbag_name_list="corridor1 corridor2"
+# rosbag_name_list="slides1 slides2 slides3"
+# rosbag_name_list="outdoors2 outdoors3 outdoors4 outdoors5 outdoors6 outdoors7 outdoors8"
+
+rosbag_name_list="outdoors7"
+
+times=4
 
 # for name in "${rosbag_name_list[@]}"
 for n in $rosbag_name_list

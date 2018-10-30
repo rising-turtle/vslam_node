@@ -55,8 +55,8 @@ do_it(){
 	mkdir -p "tum_vio_result/$rosbag_name/okvis"
     fi
      
-    j=$((i+5))
-    cp "okvis_result.log" "tum_vio_result/$rosbag_name/okvis/result_$j.log"
+    # j=$((i+5))
+    cp "okvis_result.log" "tum_vio_result/$rosbag_name/okvis/result_$i.log"
 
     echo -ne '\n'
 }
