@@ -23,6 +23,7 @@
 
 #include <boost/filesystem.hpp>
 // #include <tf/tf.h>
+#include "tic_toc.h"
 
 using namespace std;
 
@@ -219,7 +220,7 @@ int main(int argc, char **argv)
                 std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3, std::placeholders::_4));
 
-  okvis_estimator.setBlocking(true);
+  // okvis_estimator.setBlocking(true);
 
   // the folder path
   std::string path(argv[2]);
@@ -294,6 +295,7 @@ int main(int argc, char **argv)
     for (size_t i = 0; i < numCameras; ++i) {
       if (cam_iterators[i] == image_names[i].end()) {
         std::cout << std::endl << "Finished. Press any key to exit." << std::endl << std::flush;
+	cout << okvis::timing::Timing::print(); 
         cv::waitKey();
         return 0;
       }
@@ -335,6 +337,10 @@ int main(int argc, char **argv)
       do {
         if (!std::getline(imu_file, line)) {
           std::cout << std::endl << "Finished. Press any key to exit." << std::endl << std::flush;
+	  ofstream ouf("okvis_timing.log"); 
+	  okvis::timing::Timing::print(ouf); 
+	  ouf.close(); 
+
           cv::waitKey();
           return 0;
         }
@@ -377,9 +383,16 @@ int main(int argc, char **argv)
 
       } while (t_imu <= t);
 
+       // TicToc t_s; 
+       // double dt; 
+       /// static std::ofstream ouf("okvis_time.log"); 
+
+
       // add the image to the frontend for (blocking) processing
       if (t - start > deltaT) {
         okvis_estimator.addImage(t, i, filtered);
+	// dt = t_s.toc(); 
+	// ouf<<dt<<endl; 
       }
 
       cam_iterators[i]++;
@@ -394,7 +407,10 @@ int main(int argc, char **argv)
     }
 
   }
+   std::cout << std::endl << std::flush;
+  
+  
+  
 
-  std::cout << std::endl << std::flush;
   return 0;
 }

@@ -61,6 +61,7 @@
 
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include "tic_toc.h"
 
 using namespace std; 
 
@@ -382,9 +383,15 @@ int main(int argc, char **argv)
 
       } while (t_imu <= t);
 
+       // TicToc t_s; 
+       // double dt; 
+       // static std::ofstream ouf("okvis_time.log"); 
+
       // add the image to the frontend for (blocking) processing
       if (t - start > deltaT) {
-        okvis_estimator.addImage(t, i, filtered);
+            okvis_estimator.addImage(t, i, filtered);
+	    // dt = t_s.toc(); 
+	    // ouf<<dt<<endl; 
       }
 
       cam_iterators[i]++;

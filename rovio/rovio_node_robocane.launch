@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<launch>
+  <arg name="rovio_path" default="$(find vslam_rovio)"/>
+
+  <node pkg="rovio" type="rovio_node" name="rovio" output="screen">
+  <param name="filter_config" value="$(arg rovio_path)/cfg/robocane.info"/> <!--rovio_test.info -->
+  <param name="camera0_config" value="$(arg rovio_path)/cfg/ds435_downsample.yaml"/>
+  <param name="imu_topic_name" value="/imu0"/>
+  <param name="cam0_topic_name" value="/cam0/color"/>
+  <param name="record_odometry" value="false"/>
+  </node>
+</launch>
