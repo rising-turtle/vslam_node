@@ -136,7 +136,8 @@ int main(int argc, char **argv)
             cv_bridge::CvImageConstPtr cv_ptr;
             try
             {
-                cv_ptr = cv_bridge::toCvShare(imageMsg);
+                // cv_ptr = cv_bridge::toCvShare(imageMsg);
+		cv_ptr = cv_bridge::toCvCopy(imageMsg, sensor_msgs::image_encodings::MONO8);
             }
             catch (cv_bridge::Exception& e)
             {
@@ -198,7 +199,7 @@ int main(int argc, char **argv)
     SLAM.SaveKeyFrameTrajectoryNavState(config._tmpFilePath+"KeyFrameNavStateTrajectory.txt");
 
     cout<<endl<<endl<<"press any key to shutdown"<<endl;
-    getchar();
+    // getchar();
 
     // Stop all threads
     SLAM.Shutdown();

@@ -12,3 +12,6 @@ link_directories(${PCL_LIBRARY_DIRS})
 
 add_executable(vins-mapping vins-mapping.cpp)
 target_link_libraries(vins-mapping  ${OpenCV_LIBS} ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(vins-mapping-d16 vins-mapping-d16.cpp)
+target_link_libraries(vins-mapping-d16 ${OpenCV_LIBS} ${Boost_LIBRARIES} ${catkin_LIBRARIES} ${PCL_LIBRARIES})
