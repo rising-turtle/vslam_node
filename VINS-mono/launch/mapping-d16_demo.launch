@@ -1,0 +1,19 @@
+<launch>
+    <arg name="data_name" default="stair02"/>
+
+    <arg name="input_traj_log" default = "/home/hzhang8/work/ros/kinetic/src/vslam_node/result/demo_jiazhi/$(arg data_name).log"/>  <!-- DC1.csv -->
+    <arg name="input_img_directory" default = "/home/hzhang8/work/data/robocane/downsample/demo/$(arg data_name)"/>
+
+    <arg name="output_map_ply" default = "map_traj/$(arg data_name)_map.ply" /> <!-- DC1_map.ply -->
+    <arg name="output_traj_ply" default = "map_traj/$(arg data_name)_traj.ply"/> <!-- DC1_trajectory.ply -->
+
+    <node name="vslam_vins" pkg="vslam_vins" type="vins-mapping-d16" output="screen">
+        <param name="input_traj_log" type="string" value="$(arg input_traj_log)" />
+        <param name="input_img_directory" type="string" value="$(arg input_img_directory)" />
+        <param name="output_map_ply" type="string" value="$(arg output_map_ply)"/>
+        <param name="output_traj_ply" type="string" value="$(arg output_traj_ply)"/>
+	<param name="downsample_skip" type="int" value="4"/>
+	<param name="psudo_last_frame" type="bool" value="false"/>
+    </node>
+
+</launch>

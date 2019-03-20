@@ -36,6 +36,9 @@ string g_img_dir("/home/davidz/work/data/ETAS_F4_640_30");
 string g_traj_ply("trajectory.ply"); 
 string g_map_ply("map.ply"); 
 
+int g_skip = 8; 
+bool g_psudo_last_frame = false;
+
 struct trajItem
 {
   int id; int sid; // sequence id 
@@ -89,6 +92,9 @@ int main(int argc, char* argv[])
   np.param("input_img_directory", g_img_dir, g_img_dir); 
   np.param("output_traj_ply", g_traj_ply, g_traj_ply); 
   np.param("output_map_ply", g_map_ply, g_map_ply); 
+  np.param("downsample_skip", g_skip, g_skip); 
+
+  np.param("psudo_last_frame", g_psudo_last_frame, g_psudo_last_frame); 
 
   /*np.param("downsample_skip", skip, skip); 
   np.param("trajectory_skip", t_skip, t_skip); 
@@ -183,7 +189,7 @@ void generatePC(CloudPtr& all_pc, vector<obsItem>& vobs)
     dpt = cv::imread(fdpt.c_str(), -1); // depth img type us16
     CloudPtr loc_pc(new Cloud); 
     CloudPtr glo_pc(new Cloud);
-    generatePointCloud(rgb, dpt, loc_pc, 8);
+    generatePointCloud(rgb, dpt, loc_pc, g_skip);
     ROS_INFO("after generate PointCloud"); 
     
     // transform point cloud into global coordinate
@@ -196,6 +202,16 @@ void generatePC(CloudPtr& all_pc, vector<obsItem>& vobs)
     // which has not been taken into consideration
     pcl::transformPointCloud(*loc_pc, *glo_pc, eigen_T);
     
+    if(g_psudo_last_frame && i == vobs.size() - 1)
+    {
+	// make it red
+	for( int j=0; j<glo_pc->points.size(); j++)
+	{
+	    Point& pt = glo_pc->points[j];
+	    pt.r = 255; pt.g = 0; pt.b = 0; 
+	}
+    }
+
     *all_pc += *glo_pc; 
     
     // stringstream ss;
@@ -288,7 +304,7 @@ void generatePointCloud(cv::Mat& rgb, cv::Mat& dpt, pcl::PointCloud<pcl::PointXY
     // Point& pt = pc.points[v*width + u]; 
     // z = dpt.at<float>((v), (u));
     z = dpt.at<unsigned short>(v, u) * 0.001; 
-    if(std::isnan(z) || z <= 0.1 || z >= 2.5) 
+    if(std::isnan(z) || z <= 0.1 || z >= 3.0) 
     {
       continue; 
     }
